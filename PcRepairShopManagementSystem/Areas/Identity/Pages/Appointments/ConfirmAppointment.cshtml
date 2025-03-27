@@ -1,0 +1,22 @@
+﻿@page
+@model PcRepairShopManagementSystem.Areas.Identity.Pages.Appointments.ConfirmAppointmentModel
+@{
+    ViewData["Title"] = "Appointment Confirmation";
+    ViewData["ActivePage"] = "ConfirmAppointment";
+}
+
+<div class="text-center my-5">
+    <h1 class="display-4">Appointment Booked!</h1>
+    <p class="lead">
+        Thank you for booking your appointment. Your appointment has been successfully registered and is currently pending assignment by our team. Once a staff member accepts your appointment, you will receive further details and updates via email.
+    </p>
+    <hr />
+    <p>
+        You can view and manage your appointments in our Appointment Hub.
+    </p>
+    <a class="btn btn-sky btn-lg" asp-page="/Appointments/AppointmentHub">Go to Appointment Hub</a>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

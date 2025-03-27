@@ -1,0 +1,53 @@
+﻿@page
+@model PcRepairShopManagementSystem.Areas.Identity.Pages.Account.Manage.ConfirmStaffAccountModel
+@{
+    ViewData["Title"] = "Confirm Staff Account Details";
+    ViewData["ActivePage"] = "ConfirmStaffAccount";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <form method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Input.FirstName" class="form-control" placeholder="First Name" />
+                <label asp-for="Input.FirstName">First Name</label>
+                <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Input.LastName" class="form-control" placeholder="Last Name" />
+                <label asp-for="Input.LastName">Last Name</label>
+                <span asp-validation-for="Input.LastName" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Input.JobTitle" class="form-control" placeholder="Job Title" />
+                <label asp-for="Input.JobTitle">Job Title</label>
+                <span asp-validation-for="Input.JobTitle" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Input.OfficePhone" class="form-control" placeholder="Office Phone" />
+                <label asp-for="Input.OfficePhone">Office Phone</label>
+                <span asp-validation-for="Input.OfficePhone" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Input.HireDate" type="date" class="form-control" placeholder="Hire Date" />
+                <label asp-for="Input.HireDate">Hire Date</label>
+                <span asp-validation-for="Input.HireDate" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Save Staff Details</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+

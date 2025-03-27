@@ -1,0 +1,42 @@
+﻿@page
+@model PcRepairShopManagementSystem.Areas.Identity.Pages.Appointments.BookAppointmentModel
+@{
+    ViewData["Title"] = "Book Appointment";
+    ViewData["ActivePage"] = "BookAppointment";
+}
+
+<div class="text-center mb-4">
+    <h1 class="display-4">Book Your Appointment</h1>
+    <p class="lead">
+        Please fill in the details below to schedule your appointment. Once you book, our team will review your request and assign a technician. You’ll be notified when your appointment is confirmed, and you can then provide additional device details if needed.
+    </p>
+</div>
+
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <form method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <!-- Preferred Appointment Date & Time -->
+            <div class="form-floating mb-3">
+                <input asp-for="Input.StartDate" type="datetime-local" class="form-control" placeholder="Preferred Appointment Date & Time" />
+                <label asp-for="Input.StartDate">Preferred Appointment Date & Time</label>
+                <span asp-validation-for="Input.StartDate" class="text-danger"></span>
+            </div>
+
+            <!-- Issue Title -->
+            <div class="form-floating mb-3">
+                <input asp-for="Input.IssueTitle" class="form-control" placeholder="Issue Title" />
+                <label asp-for="Input.IssueTitle">Issue Title</label>
+                <span asp-validation-for="Input.IssueTitle" class="text-danger"></span>
+            </div>
+          
+
+            <button type="submit" class="w-100 btn btn-sky btn-lg">Book Appointment</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

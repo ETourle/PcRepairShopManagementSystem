@@ -1,0 +1,71 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="hero-section text-center">
+    <div class="hero-box">
+        <h1 class="display-3">Welcome to PC Repair Hub</h1>
+        <p class="lead">
+            Your one-stop solution for computer repair, quality components, and seamless appointment booking.
+        </p>
+        <a class="btn btn-sky btn-lg" href="/Identity/Appointments/BookAppointment">
+            Book an Appointment
+        </a>
+        <a class="btn btn-sky btn-lg ms-3" href="/Identity/Appointments/GrabAppointments">
+            View Available Appointments
+        </a>
+        <a class="btn btn-sky btn-lg" href="/Identity/Appointments/AppointmentsHub">
+            View Your Appointments
+        </a>
+    </div>
+</div>
+
+
+
+
+<div class="container my-5">
+    <div class="row text-center">
+        <!-- Feature 1 -->
+        <div class="col-md-4 mb-4">
+            <div class="accent-border p-4">
+                <div class="feature-icon mb-3">
+                    <i class="bi bi-calendar-check"></i> <!-- Bootstrap Icons -->
+                </div>
+                <h4>Easy Booking</h4>
+                <p>Schedule your repair appointments with just a few clicks.</p>
+            </div>
+        </div>
+        <!-- Feature 2 -->
+        <div class="col-md-4 mb-4">
+            <div class="accent-border p-4">
+                <div class="feature-icon mb-3">
+                    <i class="bi bi-tools"></i>
+                </div>
+                <h4>Expert Repairs</h4>
+                <p>Our skilled technicians ensure your device is back to optimal performance.</p>
+            </div>
+        </div>
+        <!-- Feature 3 -->
+        <div class="col-md-4 mb-4">
+            <div class="accent-border p-4">
+                <div class="feature-icon mb-3">
+                    <i class="bi bi-box-seam"></i>
+                </div>
+                <h4>Quality Components</h4>
+                <p>We supply premium parts to ensure lasting performance.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="hero-section text-center">
+    <div class="hero-box">
+        <h2>About Us</h2>
+        <p class="lead">
+            At PC Repair Hub, we combine cutting-edge technology with personal service. Whether you need a quick repair or quality components for your custom build, we're here to help.
+        </p>
+        <a class="btn btn-sky" href="/About">Learn More</a>
+    </div>
+</div>

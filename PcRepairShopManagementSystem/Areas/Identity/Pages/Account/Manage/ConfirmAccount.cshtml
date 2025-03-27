@@ -1,0 +1,78 @@
+﻿@page
+@model PcRepairShopManagementSystem.Areas.Identity.Pages.Account.Manage.ConfirmAccountModel
+@{
+    ViewData["Title"] = "Confirm Account Details";
+    ViewData["ActivePage"] = "ConfirmAccount";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <form method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Input.FirstName" class="form-control" placeholder="First Name" />
+                <label asp-for="Input.FirstName">First Name</label>
+                <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Input.LastName" class="form-control" placeholder="Last Name" />
+                <label asp-for="Input.LastName">Last Name</label>
+                <span asp-validation-for="Input.LastName" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Input.StreetAddress" class="form-control" placeholder="Street Address" />
+                <label asp-for="Input.StreetAddress">Street Address</label>
+                <span asp-validation-for="Input.StreetAddress" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Input.City" class="form-control" placeholder="City" />
+                <label asp-for="Input.City">City</label>
+                <span asp-validation-for="Input.City" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Input.StateOrProvince" class="form-control" placeholder="State/Province" />
+                <label asp-for="Input.StateOrProvince">State/Province</label>
+                <span asp-validation-for="Input.StateOrProvince" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Input.PostalCode" class="form-control" placeholder="Postal Code" />
+                <label asp-for="Input.PostalCode">Postal Code</label>
+                <span asp-validation-for="Input.PostalCode" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-3">
+                <select asp-for="Input.Country" class="form-control" aria-label="Country">
+                    <option value="">-- Select Country --</option>
+                    <option value="United Kingdom">United Kingdom</option>
+                    <option value="Germany">Germany</option>
+                    <option value="France">France</option>
+                    <option value="Italy">Italy</option>
+                    <option value="Spain">Spain</option>
+                    <option value="Netherlands">Netherlands</option>
+                    <option value="Belgium">Belgium</option>
+                    <option value="Sweden">Sweden</option>
+                    <option value="Switzerland">Switzerland</option>
+                    <option value="Austria">Austria</option>
+                    <option value="Denmark">Denmark</option>
+                    <option value="Norway">Norway</option>
+                </select>
+                <label asp-for="Input.Country">Country</label>
+                <span asp-validation-for="Input.Country" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Save Details</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,64 @@
+﻿@page
+@model PcRepairShopManagementSystem.Areas.Identity.Pages.Appointments.AppointmentHubModel
+@{
+    ViewData["Title"] = "Your Appointments";
+    ViewData["ActivePage"] = "AppointmentHub";
+}
+
+<div class="container my-5">
+    <h2 class="text-center mb-4">Your Appointments</h2>
+
+    @if (Model.Appointments == null || !Model.Appointments.Any())
+    {
+        <p class="text-center">You have no appointments scheduled.</p>
+    }
+    else
+    {
+        @foreach (var appointment in Model.Appointments)
+        {
+            <div class="card mb-4">
+                <!-- Top section: Issue Title with gradient header -->
+                <div class="card-header">
+                    <h5 class="mb-0">@appointment.IssueTitle</h5>
+                </div>
+                <!-- Bottom section: Appointment details -->
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-2"><strong>First Name:</strong> @appointment.Customer.FirstName</div>
+                        <div class="col-md-2"><strong>Last Name:</strong> @appointment.Customer.LastName</div>
+                        <div class="col-md-2"><strong>Email:</strong> @appointment.Customer.ApplicationUser.Email</div>
+                        <div class="col-md-2"><strong>Start:</strong> @appointment.StartDate.ToString("g")</div>
+                        <div class="col-md-2">
+                            <strong>Completion:</strong>
+                            @(appointment.CompletionDate.HasValue ? appointment.CompletionDate.Value.ToString("g") : "Pending")
+                        </div>
+                        <div class="col-md-2">
+                            <strong>Status:</strong>
+                            @if (appointment.Status == "Pending")
+                            {
+                                <i class="bi bi-hourglass-split" title="Pending"></i>
+                            }
+                            else if (appointment.Status == "Accepted")
+                            {
+                                <i class="bi bi-check-circle" title="Accepted"></i>
+                            }
+                            else if (appointment.Status == "Completed")
+                            {
+                                <i class="bi bi-check2-all" title="Completed"></i>
+                            }
+                            else if (appointment.Status == "Cancelled")
+                            {
+                                <i class="bi bi-x-circle" title="Cancelled"></i>
+                            }
+                            else
+                            {
+                                @appointment.Status
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>

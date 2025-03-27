@@ -1,0 +1,49 @@
+﻿@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@{
+    var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+
+    // Retrieve the current user and determine their roles.
+    var user = await UserManager.GetUserAsync(User);
+    bool isAdmin = user != null && (await UserManager.IsInRoleAsync(user, "Admin"));
+    bool isCustomer = user != null && (await UserManager.IsInRoleAsync(user, "Customer"));
+}
+<ul class="nav nav-pills flex-column">
+    <li class="nav-item">
+        <a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">Profile</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @ManageNavPages.EmailNavClass(ViewContext)" id="email" asp-page="./Email">Email</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-page="./ChangePassword">Password</a>
+    </li>
+    @if (hasExternalLogins)
+    {
+        <li id="external-logins" class="nav-item">
+            <a id="external-login" class="nav-link @ManageNavPages.ExternalLoginsNavClass(ViewContext)" asp-page="./ExternalLogins">External logins</a>
+        </li>
+    }
+    <li class="nav-item">
+        <a class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" id="two-factor" asp-page="./TwoFactorAuthentication">Two-factor authentication</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @ManageNavPages.PersonalDataNavClass(ViewContext)" id="personal-data" asp-page="./PersonalData">Personal data</a>
+    </li>
+    @if (isCustomer)
+    {
+        <li class="nav-item">
+            <a class="nav-link @ManageNavPages.ConfirmAccountNavClass(ViewContext)" id="confirm-account" asp-page="./ConfirmAccount">
+                Confirm Account Details
+            </a>
+        </li>
+    }
+    @if (isAdmin)
+    {
+        <li class="nav-item">
+            <a class="nav-link @ManageNavPages.ConfirmStaffAccountNavClass(ViewContext)" id="confirm-staff-account" asp-page="./ConfirmStaffAccount">
+                Confirm Staff Account Details
+            </a>
+        </li>
+    }
+</ul>

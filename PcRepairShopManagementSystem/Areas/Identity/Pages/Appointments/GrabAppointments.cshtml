@@ -1,0 +1,44 @@
+﻿@page
+@model PcRepairShopManagementSystem.Areas.Identity.Pages.Appointments.GrabAppointmentsModel
+@{
+    ViewData["Title"] = "Available Appointments";
+    ViewData["ActivePage"] = "GrabAppointments";
+}
+
+<div class="container my-5">
+    <h2 class="text-center mb-4">Available Appointments</h2>
+
+    @if (Model.Appointments == null || !Model.Appointments.Any())
+    {
+        <p class="text-center">No appointments available at the moment.</p>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var appointment in Model.Appointments)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card rounded border accent-border">
+                        <div class="card-body">
+                            <h5 class="card-title">@appointment.IssueTitle</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">
+                                @appointment.StartDate.ToString("g")
+                            </h6>
+                            <p class="card-text">
+                                <strong>Customer:</strong> @appointment.Customer.FirstName @appointment.Customer.LastName<br />
+                                <strong>Email:</strong> @appointment.Customer.ApplicationUser.Email
+                            </p>
+                            <form method="post" asp-page-handler="Accept" asp-route-id="@appointment.Id">
+                                <button type="submit" class="btn btn-sky">Accept</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

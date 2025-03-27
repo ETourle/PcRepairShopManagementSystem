@@ -1,0 +1,109 @@
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+}
+
+:root {
+    --sky-blue: #87CEEB;
+}
+
+/* Hero section container */
+.hero-section {
+    padding: 4rem 0;
+    text-align: center;
+}
+
+/* Single container with a rounded gradient background */
+.hero-box {
+    background: linear-gradient(to right, var(--sky-blue), white);
+    border-radius: 4rem;
+    margin: 2rem auto;
+    max-width: 90%;
+    padding: 2rem;
+    /* Remove any inner background override so the gradient shows through */
+}
+
+/* Accent borders */
+.accent-border {
+    border: 2px solid var(--sky-blue);
+    border-radius: 0.5rem;
+}
+
+/* Sky blue primary button */
+.btn-sky {
+    background-color: var(--sky-blue);
+    border: none;
+    color: white;
+}
+
+    .btn-sky:hover {
+        background-color: #76bfe0;
+    }
+
+/* Floating label style for form-floating */
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label {
+    opacity: 0.65;
+    transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
+}
+
+/* Active nav link styling, if needed */
+.nav-link.active,
+.nav-link:hover {
+    background-color: var(--sky-blue);
+    color: white;
+}
+
+/* Card border with sky blue */
+.card {
+    border: 2px solid var(--sky-blue);
+    border-radius: 0.5rem;
+}
+
+/* Card header with a left-to-right gradient from sky blue to white */
+.card-header {
+    background: linear-gradient(to right, var(--sky-blue), white);
+    color: white;
+    padding: 1rem;
+    border-bottom: none;
+}
+
+/* Video background styling */
+.video-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Keeps video behind page content */
+    overflow: hidden;
+}
+
+    .video-background video {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        min-width: 100%;
+        min-height: 100%;
+        width: auto;
+        height: auto;
+        transform: translate(-50%, -50%);
+    }
