@@ -11,7 +11,8 @@ namespace PcRepairShopManagementSystem.Models
 
         // Extra details about the device for the appointment.
         public string Title { get; set; }        // Title of the device issue or service needed
-        public string? Category { get; set; }     // e.g., Laptop, Graphics Card, Printer, etc.   
+        public string? Category { get; set; }     // e.g., Laptop, Graphics Card, Printer, SOftware  issue etc.   
+        public string? SoftwareTitle { get; set; } // Title of the software (if applicable)
         public string? Brand { get; set; }        // e.g., Dell, HP, Apple
         public string? Model { get; set; }        // Specific model name/number
         public string? SerialNumber { get; set; } // Device serial number (if applicable)

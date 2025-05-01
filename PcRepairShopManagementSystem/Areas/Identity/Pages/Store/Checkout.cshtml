@@ -1,0 +1,154 @@
+﻿@page "{handler?}"
+@model PcRepairShopManagementSystem.Areas.Identity.Pages.Store.CheckoutModel
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<div class="container my-5">
+    <div class="hero-box mx-auto" style="max-width: 600px;">
+        <h2 class="text-center mb-3">Checkout</h2>
+        <p class="text-center text-muted mb-4">
+            <i class="bi bi-info-circle-fill me-1"></i>
+            We only ship to UK addresses.
+        </p>
+
+        <div class="d-flex mb-4">
+            <button type="button" class="btn btn-sky flex-fill me-2" id="btnDelivery">
+                For Delivery
+            </button>
+            <button type="button" class="btn btn-sky flex-fill" id="btnCollection">
+                For Collection
+            </button>
+        </div>
+
+        <!-- mini‐cart preview you wanted above the forms -->
+        <div class="bg-light rounded p-3 mb-4">
+            <strong>Your Cart:</strong>
+            <div id="checkoutMiniCartItems" class="mt-2"></div>
+            <div class="d-flex justify-content-between mt-2">
+                <strong>Total:</strong>
+                <span id="checkoutMiniCartTotal" class="fw-bold">£0.00</span>
+            </div>
+        </div>
+
+        <!-- DELIVERY FORM -->
+        <form method="post" asp-page-handler="Delivery"
+              id="deliveryForm" style="display:none;">
+            <input type="hidden" asp-for="Input.ShippingType" value="Delivery" />
+            <input type="hidden" asp-for="Input.CartData" id="cartDataDelivery" />
+
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.StreetAddress1" class="form-control" placeholder="Street address line 1" />
+                <label asp-for="Input.StreetAddress1">Street address line 1 *</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.StreetAddress2" class="form-control" placeholder="Street address line 2" />
+                <label asp-for="Input.StreetAddress2">Street address line 2 *</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.City" class="form-control" placeholder="City" />
+                <label asp-for="Input.City">City *</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.StateOrProvince" class="form-control" placeholder="State or Province" />
+                <label asp-for="Input.StateOrProvince">State/Province *</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.PostalCode" class="form-control" placeholder="Postal Code" />
+                <label asp-for="Input.PostalCode">Postal Code *</label>
+            </div>
+            <button type="submit" class="btn btn-sky btn-lg w-100">Continue to Payment</button>
+        </form>
+
+        <!-- COLLECTION FORM -->
+        <form method="post" asp-page-handler="Collection"
+              id="collectionForm" style="display:none;">
+            <input type="hidden" asp-for="Input.ShippingType" value="Collection" />
+            <input type="hidden" asp-for="Input.CartData" id="cartDataCollection" />
+
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-check mb-3">
+                <input asp-for="Input.PayAtStore" class="form-check-input" id="PayAtStore" />
+                <label asp-for="Input.PayAtStore" class="form-check-label">Pay at Store</label>
+                <div class="form-text">We will hold your items for up to 14 days.</div>
+            </div>
+            <button type="submit" class="btn btn-sky btn-lg w-100">Continue</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        (function () {
+            function initCheckout() {
+                // grab everything once
+                const btnDel = document.getElementById('btnDelivery');
+                const btnCol = document.getElementById('btnCollection');
+                const formDel = document.getElementById('deliveryForm');
+                const formCol = document.getElementById('collectionForm');
+                const cartFieldD = document.getElementById('cartDataDelivery');
+                const cartFieldC = document.getElementById('cartDataCollection');
+                const miniList = document.getElementById('checkoutMiniCartItems');
+                const miniTotal = document.getElementById('checkoutMiniCartTotal');
+
+                // 1) Toggle forms
+                if (btnDel && formDel && formCol) {
+                    btnDel.addEventListener('click', () => {
+                        formDel.style.display = 'block';
+                        formCol.style.display = 'none';
+                    });
+                }
+                if (btnCol && formDel && formCol) {
+                    btnCol.addEventListener('click', () => {
+                        formDel.style.display = 'none';
+                        formCol.style.display = 'block';
+                    });
+                }
+
+                // 2) Populate CartData hidden inputs
+                function populateCartData() {
+                    const data = localStorage.getItem('pcCart') || '[]';
+                    if (cartFieldD) cartFieldD.value = data;
+                    if (cartFieldC) cartFieldC.value = data;
+                }
+                if (formDel) formDel.addEventListener('submit', populateCartData);
+                if (formCol) formCol.addEventListener('submit', populateCartData);
+
+                // 3) Render the little mini-cart summary
+                function renderCheckoutMiniCart() {
+                    const cart = JSON.parse(localStorage.getItem('pcCart') || '[]');
+                    miniList.innerHTML = '';
+                    if (!cart.length) {
+                        miniList.innerHTML = '<p class="text-center text-muted mb-0">Your cart is empty.</p>';
+                        miniTotal.textContent = '£0.00';
+                        return;
+                    }
+                    let total = 0;
+                    cart.forEach(item => {
+                        total += item.unitPrice * item.quantity;
+                        const row = document.createElement('div');
+                        row.className = 'd-flex justify-content-between mb-1';
+                        row.innerHTML = `
+                      <span>${item.componentName} × ${item.quantity}</span>
+                      <span>${(item.unitPrice * item.quantity)
+                                .toLocaleString(undefined, { style: 'currency', currency: 'GBP' })}</span>
+                    `;
+                        miniList.appendChild(row);
+                    });
+                    miniTotal.textContent = total
+                        .toLocaleString(undefined, { style: 'currency', currency: 'GBP' });
+                }
+                renderCheckoutMiniCart();
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initCheckout);
+            } else {
+                initCheckout();
+            }
+        })();
+    </script>
+}

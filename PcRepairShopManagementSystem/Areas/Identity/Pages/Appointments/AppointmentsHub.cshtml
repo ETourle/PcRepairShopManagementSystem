@@ -16,48 +16,69 @@
     {
         @foreach (var appointment in Model.Appointments)
         {
-            <div class="card mb-4">
-                <!-- Top section: Issue Title with gradient header -->
-                <div class="card-header">
-                    <h5 class="mb-0">@appointment.IssueTitle</h5>
-                </div>
-                <!-- Bottom section: Appointment details -->
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-2"><strong>First Name:</strong> @appointment.Customer.FirstName</div>
-                        <div class="col-md-2"><strong>Last Name:</strong> @appointment.Customer.LastName</div>
-                        <div class="col-md-2"><strong>Email:</strong> @appointment.Customer.ApplicationUser.Email</div>
-                        <div class="col-md-2"><strong>Start:</strong> @appointment.StartDate.ToString("g")</div>
-                        <div class="col-md-2">
-                            <strong>Completion:</strong>
-                            @(appointment.CompletionDate.HasValue ? appointment.CompletionDate.Value.ToString("g") : "Pending")
-                        </div>
-                        <div class="col-md-2">
-                            <strong>Status:</strong>
-                            @if (appointment.Status == "Pending")
-                            {
-                                <i class="bi bi-hourglass-split" title="Pending"></i>
-                            }
-                            else if (appointment.Status == "Accepted")
-                            {
-                                <i class="bi bi-check-circle" title="Accepted"></i>
-                            }
-                            else if (appointment.Status == "Completed")
-                            {
-                                <i class="bi bi-check2-all" title="Completed"></i>
-                            }
-                            else if (appointment.Status == "Cancelled")
-                            {
-                                <i class="bi bi-x-circle" title="Cancelled"></i>
-                            }
-                            else
-                            {
-                                @appointment.Status
-                            }
+            <a asp-page="/Appointments/CompleteAppointmentDetails" asp-route-id="@appointment.Id" style="text-decoration: none; color: inherit;">
+                <div class="card mb-4 @(appointment.Status == "Completed" || appointment.Status == "Resolved" ? "hover-enlarge" : "")">
+                    <!-- Top section: Issue Title with gradient header -->
+                    <div class="card-header">
+                        <h5 class="mb-0">@appointment.IssueTitle</h5>
+                    </div>
+                    <!-- Bottom section: Appointment details -->
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- Full Name (Customer's first and last) -->
+                            <div class="col-md-3">
+                                @appointment.Customer.FirstName @appointment.Customer.LastName
+                            </div>
+                            <!-- Staff Email (if assigned, else "N/A") -->
+                            <div class="col-md-3">
+                                @if (appointment.Staff != null && appointment.Staff.ApplicationUser != null)
+                                {
+                                    @appointment.Staff.ApplicationUser.Email
+                                }
+                                else
+                                {
+                                    @:N/A
+                                }
+                            </div>
+                            <!-- Start Date -->
+                            <div class="col-md-2">
+                                @appointment.StartDate.ToString("g")
+                            </div>
+                            <!-- Completion Date -->
+                            <div class="col-md-2">
+                                @(appointment.CompletionDate.HasValue ? appointment.CompletionDate.Value.ToString("g") : "---")
+                            </div>
+                            <!-- Status Icon -->
+                            <div class="col-md-2">
+                                @if (appointment.Status == "Pending")
+                                {
+                                    <i class="bi bi-hourglass-split status-icon" title="Pending"></i>
+                                }
+                                else if (appointment.Status == "Accepted")
+                                {
+                                    <i class="bi bi-check-circle status-icon" title="Accepted"></i>
+                                }
+                                else if (appointment.Status == "Completed")
+                                {
+                                    <i class="bi bi-check2-all status-icon" title="Completed"></i>
+                                }
+                                else if (appointment.Status == "Resolved")
+                                {
+                                    <i class="bi bi-check2-all status-icon" title="Resolved"></i>
+                                }
+                                else if (appointment.Status == "Cancelled")
+                                {
+                                    <i class="bi bi-x-circle status-icon" title="Cancelled"></i>
+                                }
+                                else
+                                {
+                                    @appointment.Status
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </a>
         }
     }
 </div>

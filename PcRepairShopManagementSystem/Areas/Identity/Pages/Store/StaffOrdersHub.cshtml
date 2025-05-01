@@ -1,0 +1,74 @@
+﻿@page
+@model PcRepairShopManagementSystem.Areas.Identity.Pages.Store.StaffOrderHubModel
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin")]
+
+@{
+    ViewData["Title"] = "Staff Orders";
+    ViewData["ActivePage"] = "StaffOrderHub";
+}
+
+<div class="container my-5">
+    <h2 class="text-center mb-4">All Orders</h2>
+
+    @if (Model.Orders == null || !Model.Orders.Any())
+    {
+        <p class="text-center">No orders found.</p>
+    }
+    else
+    {
+        @foreach (var order in Model.Orders)
+        {
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        Order #@order.Id —
+                        <span class="text-@(order.IsForDelivery ? "primary" : "success")">
+                            @(order.IsForDelivery ? "Delivery" : "Collection")
+                        </span>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-3">
+                            <strong>Customer:</strong><br />
+                            @order.Customer.FirstName @order.Customer.LastName
+                        </div>
+                        <div class="col-md-3">
+                            <strong>Email:</strong><br />
+                            @order.Customer.ApplicationUser.Email
+                        </div>
+                        <div class="col-md-2">
+                            <strong>Ordered:</strong><br />
+                            @order.OrderDate.ToString("g")
+                        </div>
+                        <div class="col-md-2">
+                            <strong>Total:</strong><br />
+                            @order.TotalAmount.ToString("C")
+                        </div>
+                        <div class="col-md-2">
+                            @if (!order.IsShipped)
+                            {
+                                <form method="post"
+                                      asp-page-handler="MarkShipped"
+                                      asp-route-id="@order.Id">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit"
+                                            class="btn btn-outline-secondary w-100 rounded-pill px-3 py-2 fw-bold">
+                                        Mark as Shipped
+                                    </button>
+                                </form>
+                            }
+                            else
+                            {
+                                <span class="d-inline-block bg-success text-white rounded-pill px-3 py-2 fw-bold">
+                                    Order Shipped
+                                </span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>

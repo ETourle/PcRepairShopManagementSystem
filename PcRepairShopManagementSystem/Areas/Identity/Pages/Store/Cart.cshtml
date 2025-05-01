@@ -1,0 +1,119 @@
+﻿@page
+@model PcRepairShopManagementSystem.Areas.Identity.Pages.Store.CartModel
+@{
+    ViewData["Title"] = "Your Cart";
+}
+
+<div class="container my-5">
+    <h2 class="text-center mb-4">Your Cart</h2>
+
+    <div class="table-responsive mb-4">
+        <table class="table table-hover align-middle" id="cartTable">
+            <thead class="table-light">
+                <tr>
+                    <th>Component</th>
+                    <th class="text-center">Qty</th>
+                    <th class="text-end">Unit Price</th>
+                    <th class="text-end">Line Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- JS will inject rows here -->
+            </tbody>
+        </table>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <button id="clearBtn" class="btn btn-outline-secondary">Clear Cart</button>
+        <div>
+            <strong>Total: </strong><span id="cartTotal">£0.00</span>
+        </div>
+        <button id="checkoutBtn" class="btn btn-sky">Checkout</button>
+    </div>
+
+    <div id="emptyMessage" class="text-center text-muted" style="display:none;">
+        Your cart is empty.
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        interface CartItem {
+            componentId: number;
+            componentName: string;
+            unitPrice: number;
+            quantity: number;
+        }
+
+        // Fetch cart from localStorage
+        function getCart(): CartItem[] {
+            return JSON.parse(localStorage.getItem('pcCart') || '[]');
+        }
+        function saveCart(cart: CartItem[]) {
+            localStorage.setItem('pcCart', JSON.stringify(cart));
+        }
+
+        // Render table and totals
+        function renderCart() {
+            const cart = getCart();
+            const tbody = document.querySelector('#cartTable tbody')!;
+            tbody.innerHTML = '';
+            let total = 0;
+
+            if (cart.length === 0) {
+                document.getElementById('cartTable')!.style.display = 'none';
+                document.getElementById('clearBtn')!.style.display = 'none';
+                document.getElementById('checkoutBtn')!.style.display = 'none';
+                document.getElementById('emptyMessage')!.style.display = 'block';
+                return;
+            }
+
+            document.getElementById('cartTable')!.style.display = '';
+            document.getElementById('clearBtn')!.style.display = '';
+            document.getElementById('checkoutBtn')!.style.display = '';
+            document.getElementById('emptyMessage')!.style.display = 'none';
+
+            cart.forEach(item => {
+                const line = item.unitPrice * item.quantity;
+                total += line;
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                            <td>${item.componentName}</td>
+                            <td class="text-center">${item.quantity}</td>
+                            <td class="text-end">${item.unitPrice.toLocaleString(undefined, { style: 'currency', currency: 'GBP' })}</td>
+                            <td class="text-end">${line.toLocaleString(undefined, { style: 'currency', currency: 'GBP' })}</td>
+                        `;
+                tbody.append(tr);
+            });
+
+            document.getElementById('cartTotal')!.textContent =
+                total.toLocaleString(undefined, { style: 'currency', currency: 'GBP' });
+        }
+
+        // Clear button
+        document.getElementById('clearBtn')!.addEventListener('click', () => {
+            localStorage.removeItem('pcCart');
+            renderCart();
+        });
+
+        // Checkout button: POST cart JSON to server
+        document.getElementById('checkoutBtn')!.addEventListener('click', async () => {
+            const cart = getCart();
+            const resp = await fetch('?handler=Checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(cart)
+            });
+            if (resp.ok) {
+                localStorage.removeItem('pcCart');
+                window.location.href = '/Identity/Store/Confirmation';
+            } else {
+                alert('Checkout failed. Please try again.');
+            }
+        });
+
+        // Initial render
+        renderCart();
+    </script>
+}

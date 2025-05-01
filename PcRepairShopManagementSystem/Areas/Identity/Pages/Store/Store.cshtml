@@ -1,0 +1,175 @@
+﻿@page
+@model PcRepairShopManagementSystem.Areas.Identity.Pages.Store.StoreModel
+@{
+    ViewData["Title"] = "Store";
+}
+
+<div class="container my-5">
+
+    <h2 class="text-center mb-4">Shop for Components</h2>
+
+    <!-- Info box -->
+    <div class="bg-white p-4 rounded shadow-sm mb-4">
+        <h4>Welcome to the PC Repair Hub Store</h4>
+        <p>
+            Browse our curated selection of high-quality components. Whether you’re
+            upgrading your RAM, swapping out a GPU, or building a custom rig from
+            scratch, you’ll find everything you need right here.
+        </p>
+        <ul>
+            <li>Fast shipping on all orders</li>
+            <li>Price match guarantee</li>
+            <li>Secure checkout with instant confirmation</li>
+            <li>24/7 customer support for any technical questions</li>
+        </ul>
+    </div>
+
+    <!-- Filters + Sort -->
+    <form method="get" class="row g-2 align-items-center mb-3">
+        <div class="col-md-3">
+            <select name="categoryFilter"
+                    class="form-select"
+                    onchange="this.form.pageNumber.value=1; this.form.submit()">
+                <option value="">All Categories</option>
+                @foreach (var cat in Model.Categories)
+                {
+                    if (Model.CategoryFilter == cat)
+                    {
+                        <option value="@cat" selected>@cat</option>
+                    }
+                    else
+                    {
+                        <option value="@cat">@cat</option>
+                    }
+                }
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <select name="brandFilter"
+                    class="form-select"
+                    onchange="this.form.pageNumber.value=1; this.form.submit()">
+                <option value="">All Brands</option>
+                @foreach (var br in Model.Brands)
+                {
+                    if (Model.BrandFilter == br)
+                    {
+                        <option value="@br" selected>@br</option>
+                    }
+                    else
+                    {
+                        <option value="@br">@br</option>
+                    }
+                }
+            </select>
+        </div>
+
+        <div class="col-md-3 text-end">
+            @{
+                var newSort = Model.SortOrder == "price" ? "price_desc" : "price";
+            }
+            <button type="submit"
+                    name="sortOrder"
+                    value="@newSort"
+                    class="btn btn-link text-decoration-none">
+                Sort by price
+                @if (Model.SortOrder == "price_desc")
+                {
+                    <i class="bi bi-sort-numeric-down-alt ms-1"></i>
+                }
+                else
+                {
+                    <i class="bi bi-sort-numeric-up-alt ms-1"></i>
+                }
+            </button>
+        </div>
+
+        <input type="hidden" name="pageNumber" value="@Model.PageNumber" />
+    </form>
+
+    <!-- Products list -->
+    <div class="bg-white p-4 rounded shadow-sm">
+        @foreach (var c in Model.Components)
+        {
+            <div class="row align-items-center py-3"
+                 style="border-bottom:2px solid var(--sky-blue);">
+                <div class="col-auto">
+                    <img src="@c.ImageUrl"
+                         alt="@c.Name"
+                         class="img-fluid rounded"
+                         style="width:80px; height:auto;" />
+                </div>
+                <div class="col">
+                    <h5 class="mb-1">@c.Name</h5>
+                    <div class="text-muted">@c.Price.ToString("C")</div>
+                </div>
+                <div class="col-auto">
+                    <div class="input-group input-group-sm">
+                        <button class="btn btn-outline-secondary"
+                                type="button"
+                                onclick="changeQty('@c.Id', -1)">−</button>
+                        <input id="qty-@c.Id"
+                               type="number"
+                               value="1"
+                               min="1"
+                               class="form-control text-center"
+                               style="width:3rem;" />
+                        <button class="btn btn-outline-secondary"
+                                type="button"
+                                onclick="changeQty('@c.Id', +1)">+</button>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-sky btn-sm ms-2"
+                            type="button"
+                            onclick='addToCart(
+                                @c.Id,
+                                "@(c.Name.Replace("\"", "\\\""))",
+                                @c.Price,
+                                parseInt(document.getElementById("qty-@c.Id").value)
+                            )'>
+                        Buy
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Pagination -->
+    <nav aria-label="Store pagination" class="mt-4">
+        <ul class="pagination justify-content-center mb-0">
+            <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+                <a class="page-link"
+                   asp-page="./Store"
+                   asp-route-sortOrder="@Model.SortOrder"
+                   asp-route-categoryFilter="@Model.CategoryFilter"
+                   asp-route-brandFilter="@Model.BrandFilter"
+                   asp-route-pageNumber="@(Model.PageNumber - 1)">
+                    &laquo; Previous
+                </a>
+            </li>
+            <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+                <a class="page-link"
+                   asp-page="./Store"
+                   asp-route-sortOrder="@Model.SortOrder"
+                   asp-route-categoryFilter="@Model.CategoryFilter"
+                   asp-route-brandFilter="@Model.BrandFilter"
+                   asp-route-pageNumber="@(Model.PageNumber + 1)">
+                    Next &raquo;
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+</div>
+
+@section Scripts {
+    <script>
+        function changeQty(id, delta) {
+            const input = document.getElementById('qty-' + id);
+            let v = parseInt(input.value) + delta;
+            if (isNaN(v) || v < 1) v = 1;
+            input.value = v;
+        }
+    </script>
+}

@@ -1,0 +1,168 @@
+﻿@page
+@model PcRepairShopManagementSystem.Areas.Identity.Pages.Store.StockManagementModel
+@{
+    ViewData["Title"] = "Stock Management";
+}
+
+<div class="container my-5">
+    <h2 class="text-center mb-4">Stock Management</h2>
+
+    <!-- Instruction box -->
+    <div class="bg-white p-4 rounded shadow-sm mb-4">
+        <h4>Staff Stock Control</h4>
+        <p>
+            Here you can adjust stock levels for all components. Click the <span class="text-danger">−</span> or
+            <span class="text-success">+</span> buttons to decrease or increase the “In Stock” count.
+            Changes are saved immediately.
+        </p>
+    </div>
+
+    <!-- Filters + Sort -->
+    <form method="get" class="row g-2 align-items-center mb-3">
+        <div class="col-md-3">
+            <select name="categoryFilter"
+                    class="form-select"
+                    onchange="this.form.pageNumber.value=1; this.form.submit()">
+                <option value="">All Categories</option>
+                @foreach (var cat in Model.Categories)
+                {
+                    if (Model.CategoryFilter == cat)
+                    {
+                        <option value="@cat" selected>@cat</option>
+                    }
+                    else
+                    {
+                        <option value="@cat">@cat</option>
+                    }
+                }
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <select name="brandFilter"
+                    class="form-select"
+                    onchange="this.form.pageNumber.value=1; this.form.submit()">
+                <option value="">All Brands</option>
+                @foreach (var br in Model.Brands)
+                {
+                    if (Model.BrandFilter == br)
+                    {
+                        <option value="@br" selected>@br</option>
+                    }
+                    else
+                    {
+                        <option value="@br">@br</option>
+                    }
+                }
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            @{
+                var newSort = Model.SortStock == "stock"
+                ? "stock_desc"
+                : "stock";
+            }
+            <button type="submit"
+                    name="sortStock"
+                    value="@newSort"
+                    class="btn btn-link text-decoration-none">
+                Sort by stock
+                @if (Model.SortStock == "stock_desc")
+                {
+                    <i class="bi bi-sort-numeric-down-alt ms-1"></i>
+                }
+                else
+                {
+                    <i class="bi bi-sort-numeric-up-alt ms-1"></i>
+                }
+            </button>
+        </div>
+
+        <input type="hidden" name="pageNumber" value="@Model.PageNumber" />
+    </form>
+
+    <!-- Stock list -->
+    <div class="bg-white p-4 rounded shadow-sm">
+        @foreach (var c in Model.Components)
+        {
+            <div class="row align-items-center py-3"
+                 style="border-bottom:2px solid var(--sky-blue);">
+                <div class="col-auto">
+                    <img src="@c.ImageUrl"
+                         alt="@c.Name"
+                         class="img-fluid rounded"
+                         style="width:80px; height:auto;" />
+                </div>
+                <div class="col">
+                    <h5 class="mb-1">@c.Name</h5>
+                    <div class="text-muted">@c.Manufacturer</div>
+                </div>
+                <div class="col-auto text-center">
+                    <div class="small text-muted">In Stock</div>
+                    <div class="fw-bold">@c.QuantityInStock</div>
+                </div>
+                <div class="col-auto">
+                    <div class="btn-group">
+                        <!-- Decrease -->
+                        <form method="post"
+                              asp-page-handler="Decrease"
+                              asp-route-id="@c.Id"
+                              class="d-inline">
+                            @* preserve filters/sort/page *@
+                            <input type="hidden" name="categoryFilter" value="@Model.CategoryFilter" />
+                            <input type="hidden" name="brandFilter" value="@Model.BrandFilter" />
+                            <input type="hidden" name="sortStock" value="@Model.SortStock" />
+                            <input type="hidden" name="pageNumber" value="@Model.PageNumber" />
+                            <button type="submit"
+                                    class="btn btn-outline-danger btn-sm rounded">
+                                −
+                            </button>
+                        </form>
+                        <!-- Increase -->
+                        <form method="post"
+                              asp-page-handler="Increase"
+                              asp-route-id="@c.Id"
+                              class="d-inline">
+                            @* preserve filters/sort/page *@
+                            <input type="hidden" name="categoryFilter" value="@Model.CategoryFilter" />
+                            <input type="hidden" name="brandFilter" value="@Model.BrandFilter" />
+                            <input type="hidden" name="sortStock" value="@Model.SortStock" />
+                            <input type="hidden" name="pageNumber" value="@Model.PageNumber" />
+                            <button type="submit"
+                                    class="btn btn-outline-success btn-sm rounded">
+                                +
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Pagination -->
+    <nav aria-label="Stock pagination" class="mt-4">
+        <ul class="pagination justify-content-center mb-0">
+            <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+                <a class="page-link"
+                   asp-page="./StockManagement"
+                   asp-route-categoryFilter="@Model.CategoryFilter"
+                   asp-route-brandFilter="@Model.BrandFilter"
+                   asp-route-sortStock="@Model.SortStock"
+                   asp-route-pageNumber="@(Model.PageNumber - 1)">
+                    &laquo; Previous
+                </a>
+            </li>
+            <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+                <a class="page-link"
+                   asp-page="./StockManagement"
+                   asp-route-categoryFilter="@Model.CategoryFilter"
+                   asp-route-brandFilter="@Model.BrandFilter"
+                   asp-route-sortStock="@Model.SortStock"
+                   asp-route-pageNumber="@(Model.PageNumber + 1)">
+                    Next &raquo;
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>

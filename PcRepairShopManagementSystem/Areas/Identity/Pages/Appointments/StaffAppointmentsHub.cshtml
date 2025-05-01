@@ -1,0 +1,138 @@
+﻿@page
+@model PcRepairShopManagementSystem.Areas.Identity.Pages.Appointments.StaffAppointmentHubModel
+@{
+    ViewData["Title"] = "Your Assigned Appointments";
+    ViewData["ActivePage"] = "StaffAppointmentHub";
+}
+
+<div class="container my-5">
+    <h2 class="text-center mb-4">Your Assigned Appointments</h2>
+
+    @if (Model.Appointments == null || !Model.Appointments.Any())
+    {
+        <p class="text-center">No appointments assigned to you.</p>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var appt in Model.Appointments)
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="card hover-enlarge"
+                         style="cursor:pointer;"
+                         data-bs-toggle="modal"
+                         data-bs-target="#detailModal"
+                         data-title="@(appt.AppointmentDetail?.Title ?? appt.IssueTitle)"
+                         data-category="@(appt.AppointmentDetail?.Category ?? "—")"
+                         data-software="@(appt.AppointmentDetail?.SoftwareTitle ?? "—")"
+                         data-brand="@(appt.AppointmentDetail?.Brand ?? "—")"
+                         data-model="@(appt.AppointmentDetail?.Model ?? "—")"
+                         data-serial="@(appt.AppointmentDetail?.SerialNumber ?? "—")"
+                         data-notes="@(appt.AppointmentDetail?.AdditionalNotes ?? "—")">
+                        <!-- Header -->
+                        <div class="card-header">
+                            <h5 class="mb-0">@appt.IssueTitle</h5>
+                        </div>
+                        <!-- Body -->
+                        <div class="card-body">
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <strong>Customer:</strong><br />
+                                    @appt.Customer.FirstName @appt.Customer.LastName
+                                </div>
+                                <div class="col">
+                                    <strong>Email:</strong><br />
+                                    @appt.Customer.ApplicationUser.Email
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <strong>Start:</strong><br />
+                                    @appt.StartDate:g
+                                </div>
+                                <div class="col">
+                                    <strong>Status:</strong><br />
+                                    @switch (appt.Status)
+                                    {
+                                        case "Accepted":
+                                            <i class="bi bi-check-circle status-icon" title="Accepted"></i>;
+                                            break;
+                                        case "Completed":
+                                            <i class="bi bi-check2-all status-icon" title="Completed"></i>;
+                                            break;
+                                        case "Cancelled":
+                                            <i class="bi bi-x-circle status-icon" title="Cancelled"></i>;
+                                            break;
+                                        default:
+                                            <i class="bi bi-hourglass-split status-icon" title="@appt.Status"></i>;
+                                            break;
+                                    }
+                                </div>
+                            </div>
+                            <!-- Mark as complete form -->
+                            <form method="post" asp-page-handler="Complete" asp-route-id="@appt.Id">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-outline-secondary w-100">
+                                    Mark as complete
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<!-- Details Modal -->
+<div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header hero-box">
+                <h5 class="modal-title text-center w-100">Appointment Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <dl class="row">
+                    <dt class="col-sm-3">Title</dt>
+                    <dd class="col-sm-9" id="modalTitle"></dd>
+                    <dt class="col-sm-3">Category</dt>
+                    <dd class="col-sm-9" id="modalCategory"></dd>
+                    <dt class="col-sm-3">Software</dt>
+                    <dd class="col-sm-9" id="modalSoftware"></dd>
+                    <dt class="col-sm-3">Brand</dt>
+                    <dd class="col-sm-9" id="modalBrand"></dd>
+                    <dt class="col-sm-3">Model</dt>
+                    <dd class="col-sm-9" id="modalModel"></dd>
+                    <dt class="col-sm-3">Serial #</dt>
+                    <dd class="col-sm-9" id="modalSerial"></dd>
+                    <dt class="col-sm-3">Additional Notes</dt>
+                    <dd class="col-sm-9" id="modalNotes"></dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        var detailModal = document.getElementById('detailModal');
+        detailModal.addEventListener('show.bs.modal', function (event) {
+            var card = event.relatedTarget;
+            var fields = {
+                Title: card.getAttribute('data-title'),
+                Category: card.getAttribute('data-category'),
+                Software: card.getAttribute('data-software'),
+                Brand: card.getAttribute('data-brand'),
+                Model: card.getAttribute('data-model'),
+                Serial: card.getAttribute('data-serial'),
+                Notes: card.getAttribute('data-notes')
+            };
+            Object.keys(fields).forEach(function (key) {
+                document.getElementById('modal' + key).textContent = fields[key];
+            });
+        });
+    </script>
+}
+

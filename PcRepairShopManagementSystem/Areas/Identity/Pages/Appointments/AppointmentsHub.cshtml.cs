@@ -26,24 +26,26 @@ namespace PcRepairShopManagementSystem.Areas.Identity.Pages.Appointments
 
         public async Task<IActionResult> OnGetAsync()
         {
-            // Retrieve the current Identity user's ID.
+            // Retrieve the current user's ID from Identity
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId))
             {
                 return NotFound("User not found.");
             }
 
-            // Retrieve the Customer record for the logged-in user using ApplicationUserId.
+            // Retrieve the Customer record for the logged-in user
             var customer = await _dbContext.Customers.FirstOrDefaultAsync(c => c.ApplicationUserId == userId);
             if (customer == null)
             {
                 return NotFound("Customer details not found. Please complete your account details first.");
             }
 
-            // Load all appointments for this customer, including the linked Identity user (for email)
+            // Load appointments for this customer, including related Customer and Staff details
             Appointments = await _dbContext.Appointments
                 .Include(a => a.Customer)
                     .ThenInclude(c => c.ApplicationUser)
+                .Include(a => a.Staff)
+                    .ThenInclude(s => s.ApplicationUser)
                 .Where(a => a.CustomerId == customer.Id)
                 .OrderByDescending(a => a.StartDate)
                 .ToListAsync();

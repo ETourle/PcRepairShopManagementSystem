@@ -1,0 +1,18 @@
+﻿@page "{id:int}"
+@model PcRepairShopManagementSystem.Areas.Identity.Pages.Store.OrderConfirmationModel
+@{
+    ViewData["Title"] = "Order Confirmation";
+}
+
+<div class="container my-5">
+    <div class="hero-box mx-auto text-center" style="max-width: 600px;">
+        <h2 class="mb-3">Thank you for your order!</h2>
+        <p>Your order number is <strong>@Model.OrderId</strong>.</p>
+        <p class="text-muted">You’ll receive an email confirmation shortly.</p>
+        <a asp-page="/Index" class="btn btn-sky mt-4">Return to Home</a>
+    </div>
+</div>
+
+<script>
+    localStorage.removeItem('pcCart');
+</script>

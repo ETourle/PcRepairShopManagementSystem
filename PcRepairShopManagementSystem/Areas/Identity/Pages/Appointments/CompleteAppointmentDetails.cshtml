@@ -1,0 +1,118 @@
+﻿@page "{id:int}"
+@model PcRepairShopManagementSystem.Areas.Identity.Pages.Appointments.CompleteAppointmentDetailsModel
+@{
+    ViewData["Title"] = "Complete Appointment Details";
+    ViewData["ActivePage"] = "CompleteAppointmentDetails";
+}
+
+<div class="hero-box text-center">
+    <h2>Please provide additional details regarding your issue</h2>
+</div>
+
+<div class="container my-5">
+    <form method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        <!-- Title (prefilled from IssueTitle) -->
+        <div class="form-floating mb-3">
+            <input asp-for="Input.Title" class="form-control" placeholder="Title" />
+            <label asp-for="Input.Title">Title</label>
+            <span asp-validation-for="Input.Title" class="text-danger"></span>
+        </div>
+
+        <!-- Category (required) -->
+        <div class="form-floating mb-3">
+            <select asp-for="Input.Category" class="form-control" id="categorySelect">
+                <option value="">-- Select Category --</option>
+                <option value="Software Issue">Software Issue</option>
+                <option value="Laptop">Laptop</option>
+                <option value="Custom Build PC">Custom Build PC</option>
+                <option value="Component">Component</option>
+            </select>
+            <label asp-for="Input.Category">Category <span class="text-danger">*</span></label>
+            <span asp-validation-for="Input.Category" class="text-danger"></span>
+        </div>
+
+        <!-- Dynamic next field -->
+        <div class="form-floating mb-3">
+            <input asp-for="Input.SoftwareTitle"
+                   class="form-control"
+                   id="dynamicField"
+                   placeholder="Software Title (if applicable)" />
+            <label for="dynamicField" id="dynamicLabel">Software Title</label>
+            <span asp-validation-for="Input.SoftwareTitle" class="text-danger"></span>
+        </div>
+
+        <!-- Brand -->
+        <div class="form-floating mb-3">
+            <input asp-for="Input.Brand" class="form-control" placeholder="Brand" />
+            <label asp-for="Input.Brand">Brand</label>
+            <span asp-validation-for="Input.Brand" class="text-danger"></span>
+        </div>
+
+        <!-- Model -->
+        <div class="form-floating mb-3">
+            <input asp-for="Input.Model" class="form-control" placeholder="Model" />
+            <label asp-for="Input.Model">Model</label>
+            <span asp-validation-for="Input.Model" class="text-danger"></span>
+        </div>
+
+        <!-- Serial Number -->
+        <div class="form-floating mb-3">
+            <input asp-for="Input.SerialNumber" class="form-control" placeholder="Serial Number" />
+            <label asp-for="Input.SerialNumber">Serial Number</label>
+            <span asp-validation-for="Input.SerialNumber" class="text-danger"></span>
+        </div>
+
+        <!-- Additional Details (required) -->
+        <div class="form-floating mb-3">
+            <textarea asp-for="Input.AdditionalNotes"
+                      class="form-control"
+                      placeholder="Please provide more detail to help us with your issue!"
+                      style="height: 150px;"
+                      id="additionalNotes"></textarea>
+            <label asp-for="Input.AdditionalNotes">
+                Additional Details <span class="text-danger">*</span>
+            </label>
+            <span asp-validation-for="Input.AdditionalNotes" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-sky btn-lg w-100">Submit Details</button>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const mapping = {
+                "Software Issue": { label: "Software Title", placeholder: "Enter software title" },
+                "Laptop": { label: "Laptop Name", placeholder: "Enter laptop model/name" },
+                "Custom Build PC": { label: "Build Name", placeholder: "Enter custom build name" },
+                "Component": { label: "Component Name", placeholder: "Enter component name" }
+            };
+
+            const categorySelect = document.getElementById("categorySelect");
+            const dynamicLabel = document.getElementById("dynamicLabel");
+            const dynamicField = document.getElementById("dynamicField");
+
+            function updateDynamicField() {
+                const choice = categorySelect.value;
+                if (mapping[choice]) {
+                    dynamicLabel.textContent = mapping[choice].label;
+                    dynamicField.placeholder = mapping[choice].placeholder;
+                } else {
+                    dynamicLabel.textContent = "Title";
+                    dynamicField.placeholder = "Title";
+                }
+            }
+
+            // Initialize on page load
+            updateDynamicField();
+
+            // Update whenever category changes
+            categorySelect.addEventListener("change", updateDynamicField);
+        });
+    </script>
+}
