@@ -16,6 +16,20 @@
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
+.btn-primary {
+    background-color: var(--sky-blue) !important;
+    border-color: var(--sky-blue) !important;
+    color: #fff !important;
+}
+
+    .btn-primary:hover,
+    .btn-primary:focus,
+    .btn-primary:active {
+        background-color: #76bfe0 !important; 
+        border-color: #76bfe0 !important;
+        color: #fff !important;
+    }
+
 html {
     position: relative;
     min-height: 100%;
@@ -150,6 +164,36 @@ nav.custom-navbar {
     nav.custom-navbar .navbar-collapse {
         display: flex !important;
     }
+
+/* —— ManageNav (profile/account sidebar) styling —— */
+.nav-pills.flex-column {
+    background: #fff;
+    border: 2px solid var(--sky-blue);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    /* ensure it doesn’t collapse on small content */
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 2rem;
+}
+
+    .nav-pills.flex-column .nav-link {
+        color: var(--sky-blue);
+        margin-bottom: 0.5rem;
+        border-radius: 0.25rem;
+        transition: background-color 0.2s, color 0.2s;
+    }
+
+        .nav-pills.flex-column .nav-link:hover {
+            background-color: #76bfe0;
+            color: #fff;
+        }
+
+        .nav-pills.flex-column .nav-link.active {
+            background-color: var(--sky-blue);
+            color: #fff;
+        }
+
 
 /* ==========================================================================
    CUSTOM NAVBAR OVERRIDES
