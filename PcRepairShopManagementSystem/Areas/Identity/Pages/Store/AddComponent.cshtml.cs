@@ -41,7 +41,7 @@ namespace PcRepairShopManagementSystem.Areas.Identity.Pages.Store
             [Required, StringLength(100)]
             public string Manufacturer { get; set; }
 
-            [Required, Url]
+            [Required, StringLength(50)]
             public string ImageUrl { get; set; }
         }
 

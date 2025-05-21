@@ -7,7 +7,13 @@
     <UserSecretsId>aspnet-PcRepairShopManagementSystem-3907c605-e3aa-4ab8-8195-1650873d5b86</UserSecretsId>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+  </PropertyGroup>
+
   <ItemGroup>
+    <PackageReference Include="DinkToPdfIncludesDependencies" Version="1.0.8" />
     <PackageReference Include="MailKit" Version="4.12.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.10" />
@@ -22,8 +28,24 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- grab *all* native bits under runtimes\<RID>\native\ and flatten-copy them to output root -->
+    <Content Include="runtimes\**\native\*.*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+      <!-- rewrite the output path to drop the RID/native subfolders -->
+      <Link>%(Filename)%(Extension)</Link>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\Images\" />
     <Folder Include="wwwroot\Videos\" />
   </ItemGroup>
+
+  <!-- Ensure libwkhtmltox.dll is copied into your bin folder -->
+  <Target Name="CopyWkHtmlToX" AfterTargets="Build">
+    <Message Importance="high" Text="👉 Copying libwkhtmltox.dll into output root…" />
+    <Copy SourceFiles="runtimes\win-x64\native\libwkhtmltox.dll" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" />
+  </Target>
 
 </Project>

@@ -1,0 +1,37 @@
+﻿@page
+@model PcRepairShopManagementSystem.Areas.Identity.Pages.Store.PrintTestModel
+
+<h1>PDF Print Test</h1>
+<button id="downloadPdfBtn" class="btn btn-primary">Open PDF in New Tab</button>
+<div id="pdfError" style="color: red; margin-top: 1em;"></div>
+
+<script>
+    document.getElementById('downloadPdfBtn').addEventListener('click', function () {
+        document.getElementById('pdfError').innerText = ""; // Clear previous error
+        var html = document.documentElement.outerHTML;
+
+        fetch('/api/Pdf', { // <-- Now using the API controller endpoint!
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ html: html })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        // Log error for debugging
+                        console.error("Backend error response:", text);
+                        throw new Error(text || "Unknown backend error");
+                    });
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                var blobUrl = window.URL.createObjectURL(blob);
+                window.open(blobUrl, '_blank');
+            })
+            .catch(error => {
+                document.getElementById('pdfError').innerText = error.message || "Unknown error";
+                console.error("Frontend error:", error);
+            });
+    });
+</script>

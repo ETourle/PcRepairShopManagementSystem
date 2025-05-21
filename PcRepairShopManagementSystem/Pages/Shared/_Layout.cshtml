@@ -47,7 +47,7 @@
                     <li class="nav-item"><a class="nav-link" asp-area="Identity" asp-page="/Appointments/AppointmentsHub">My Appointments</a></li>
                     <li class="nav-item"><a class="nav-link" asp-area="Identity" asp-page="/Store/TrackOrders">My Orders</a></li>
 
-                    @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                    @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin")) 
                     {
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="staffMenu"
@@ -60,6 +60,9 @@
                                 <li><a class="dropdown-item" asp-area="Identity" asp-page="/Appointments/StaffAppointmentsHub">Assigned Appointments</a></li>
                                 <li><a class="dropdown-item" asp-area="Identity" asp-page="/Store/StaffOrdersHub">View Orders</a></li>
                                 <li><a class="dropdown-item" asp-area="Identity" asp-page="/Store/StockManagement">Stock Management</a></li>
+                                <!-- <li><a class="dropdown-item" asp-area="Identity" asp-page="/Store/PrintTest">Print Test</a></li> -->
+
+                                    
                             </ul>
                         </li>
                     }
